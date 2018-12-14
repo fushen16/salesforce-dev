@@ -1,7 +1,20 @@
 ({
     doInit: function(component, event, helper) {
+        
+        var action = component.get("c.getItems");
+        action.setCallback(this, function(response){
+            var state = response.getState();
+            if(state === "SUCCESS") {
+                component.set("v.items", response.getReturnValue());
+            }
+            else{
+                console.log("Failed with state: " + state);
+            }
+        });
+        
+        $A.enqueueAction(action);
 
-        console.log("this is a test");
+        //console.log("this is a test");
     },
     clickCreateItem: function(component, evt, hlpr) {
         
@@ -14,17 +27,29 @@
         if(validItem) {
             
             var newItem = component.get("v.newItem");
-            var newItemObj = JSON.parse(JSON.stringify(newItem));
-            var items = component.get("v.items");
-            items.push(newItemObj);
-            component.set("v.items", items);
-            //console.log("updated items", JSON.stringify(cmp.get("v.items")));
-            component.set("v.newItem",
-                    {'sobjectType' : 'Camping_Item__c',
-                     'Name' : '',
-                     'Quantity__c' : 0,
-                     'Price__c' : 0,
-                     'Packed__c' : false});           
+            var action = component.get("c.saveItem");
+            action.setParams({
+                "campingItem": newItem
+            });
+            
+            action.setCallback(this, function(response){
+                var state = response.getState();
+                if (state === "SUCCESS") {
+                	var items = component.get("v.items");
+                	items.push(response.getReturnValue());
+                	component.set("v.items", items);
+                	
+                	//reset the new item form
+                    component.set("v.newItem",
+                            {'sobjectType' : 'Camping_Item__c',
+                             'Name' : '',
+                             'Quantity__c' : 0,
+                             'Price__c' : 0,
+                             'Packed__c' : false});  
+                }
+            });
+            
+            $A.enqueueAction(action);        
         }
     }
 })
