@@ -13,11 +13,26 @@
         });
         
         $A.enqueueAction(action);
-
+        
         //console.log("this is a test");
     },
-    clickCreateItem: function(component, event, helper) {
+    
+    handleAddItem: function(component, event, helper) {
         
-        helper.createItem(component, event);
+        var newItem = event.getParam("item");
+        var action = component.get("c.saveItem");
+        action.setParams({
+            "campingItem": newItem
+        });
+        action.setCallback(this, function(response){
+            
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var items = component.get("v.items");
+                items.push(response.getReturnValue());
+                component.set("v.items", items);
+            }
+        });
+        $A.enqueueAction(action); 
     }
-})
+ })
