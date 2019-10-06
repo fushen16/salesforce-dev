@@ -1,4 +1,4 @@
-<!--comments from PI-1-->
+<!-- comments: this a lighning component-->
 <aura:component >
     <c:campingHeader />
     <c:campingList />
