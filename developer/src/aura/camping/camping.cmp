@@ -1,3 +1,4 @@
+<!--comments from PI-1-->
 <aura:component >
     <c:campingHeader />
     <c:campingList />
