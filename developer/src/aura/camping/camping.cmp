@@ -1,4 +1,5 @@
 <!-- this a lighning component-->
+<!--PI2 feature branch-->
 <aura:component >
     <c:campingHeader />
     <c:campingList />
